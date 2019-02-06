@@ -10,7 +10,6 @@ import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator;
 
 public class View {
 
-
     Button startButton;
     Button exitButton;
 
@@ -27,11 +26,9 @@ public class View {
     CountDownTimer countDownTimer;
     int halfMin = 60 * 1000; // 30 sec  in Milli sekunden
 
-    public MainActivity mainActivity;
-
 
     // The Method lets the Activity vissible
-    public void visible(){
+    public void visible() {
         exitButton.setVisibility(android.view.View.VISIBLE);
         progressBar.setVisibility(android.view.View.VISIBLE);
         firstRandomNumber.setVisibility(android.view.View.VISIBLE);
@@ -44,7 +41,7 @@ public class View {
     }
 
     /* FALLS NEUGESTARTET WIRD */
-    public void neustart(){
+    public void neustart() {
         exitButton.setVisibility(android.view.View.INVISIBLE);
         progressBar.setVisibility(android.view.View.INVISIBLE);
         firstRandomNumber.setVisibility(android.view.View.INVISIBLE);
@@ -59,35 +56,26 @@ public class View {
         progressBar.setEnabled(true);
         progressBar.setCurrentProgress(STARTINGPOSITION);
         countDownTimer.cancel();
-    }
-
-    public void timer(){
-    /* CountDownTimer startet mit einer halben Minute und jeder onTick ist 10 sekunden */
-    countDownTimer = new CountDownTimer(halfMin, 10) {
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-
-            Log.i("time",   String.valueOf(millisUntilFinished / 1000));
-
-            progressBar.setCurrentProgress(millisUntilFinished);
-
-        }
-
-        @Override
-        public void onFinish() {
-
-            // Hier soll noch ein
-
-            Log.i("info", "Timer ist fertig");
-
-            cancel();
-
-        }
-    }.start();
 
     }
 
+    public void timer() {
+        /* CountDownTimer startet mit einer halben Minute und jeder onTick ist 10 sekunden */
+        countDownTimer = new CountDownTimer(halfMin, 10) {
 
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.i("time", String.valueOf(millisUntilFinished / 1000));
+                progressBar.setCurrentProgress(millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                // Hier soll noch ein
+                Log.i("info", "Timer ist fertig");
+                cancel();
+            }
+        }.start();
     }
+}
 

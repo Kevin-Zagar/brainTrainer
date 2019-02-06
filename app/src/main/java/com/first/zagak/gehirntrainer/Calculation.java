@@ -1,107 +1,105 @@
 package com.first.zagak.gehirntrainer;
 
-import android.util.Log;
-import android.widget.Button;
-
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public class Calculation {
 
-    View view = new View();
+    private int solution;
+    private ArrayList<Integer> randomSolutions = new ArrayList<>();
 
-    Button button1;
-    Button button2;
-    Button button3;
-    Button button4;
+    public int getSolution() {
+        return solution;
+    }
 
-    Random r = new Random();
+    public void setSolution(int solution) {
+        this.solution = solution;
+    }
 
-    /* Mathe Aufgaben */
-    public int randomNumber(){
+    public ArrayList<Integer> getRandomSolutions() {
+        return randomSolutions;
+    }
+
+    public void setRandomSolutions(ArrayList<Integer> randomSolutions) {
+        this.randomSolutions = randomSolutions;
+    }
+
+    public int randomNumber() {
         int max = 0;
         int min = 50;
-        return (int) (Math.random() * ((max-min) + 1)) + min;
+        return (int) (Math.random() * ((max - min) + 1)) + min;
 
     }
 
-    /* Random + - */
-    public char addOrSub(){
+    /* Random + or - */
+    public char addOrSub() {
+        Random r = new Random();
         String plusMinus = "+-";
         final char c = plusMinus.charAt(r.nextInt(plusMinus.length()));
         return c;
     }
 
-
-
     // We check what came out as an operator and than do the math
-    public int answerRandomMathQuestion(){
-        int first = Integer.parseInt((String) view.firstRandomNumber.getText());
-        int second = Integer.parseInt((String) view.secondRandomNumber.getText());
-        String operator = (String) view.randomAddOrSub.getText();
+    public void calculateRandomMathQuestion(int firstNumber, int secondNumber, String operator) {
 
-        if (operator.equals("-")){
-            int answer = first - second;
-            Log.i("info", "Lösung: " + String.valueOf(answer));
-            return answer;
-        }else {
-            int answer = first + second;
-            Log.i("info", "Lösung: " + String.valueOf(answer));
-            return answer;
-
+        if (operator.equals("-")) {
+            solution = firstNumber - secondNumber;
+        } else {
+            solution = firstNumber + secondNumber;
         }
-
+        setRandomSolutions();
     }
 
-    /*
-    The answer  of answerRandomQuestion is getting a rando - or +
-    We take a random boolean to choose the operator
-    */
-    private int differentAnswers(){
+    private boolean checkIfDuplicatedRandomSolutionExits() {
+        for (int i = 0; i < randomSolutions.size(); i++) {
+            if (randomSolutions.get(i).intValue() == randomSolutions.get(i++).intValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    private void setRandomSolutions() {
+        for (int i = 0; i < 4; i++) {
+            randomSolutions.add(generateRandomSolution());
+        }
+    }
+
+    private int generateRandomSolution() {
         int max = 1;
         int min = 10;
-        int oneToTen = (int) (Math.random() * ((max - min) + 1)) + min;
+        int randomNumberBetweenOneAndTen = (int) (Math.random() * ((max - min) + 1)) + min;
 
-        boolean value = r.nextBoolean();
+        int randomSolution;
 
-        if(value){
-            return answerRandomMathQuestion() - oneToTen;
-        }else return answerRandomMathQuestion() + oneToTen;
+        Random r = new Random();
+        boolean generateRandomMinusCalculation = r.nextBoolean();
 
+        if (generateRandomMinusCalculation) {
+            randomSolution = solution - randomNumberBetweenOneAndTen;
+
+            for (int number : randomSolutions) {
+                if (number == randomSolution) {
+                    while (checkIfDuplicatedRandomSolutionExits()) {
+                        randomNumberBetweenOneAndTen = (int) (Math.random() * ((max - min) + 1)) + min;
+                        randomSolution = solution - randomNumberBetweenOneAndTen;
+                    }
+                }
+            }
+            return randomSolution;
+        } else {
+            randomSolution = solution + randomNumberBetweenOneAndTen;
+
+            for (int number : randomSolutions) {
+                if (number == randomSolution) {
+                    while (checkIfDuplicatedRandomSolutionExits()) {
+                        randomNumberBetweenOneAndTen = (int) (Math.random() * ((max - min) + 1)) + min;
+                        randomSolution = solution + randomNumberBetweenOneAndTen;
+                    }
+                }
+            }
+            return randomSolution;
+        }
     }
-
-    /**
-     * Noch nicht fertig
-     */
-    public void noMoreThanOneSameAnswer(){
-
-        do {
-            button1.setText(String.valueOf(differentAnswers()));
-            button2.setText(String.valueOf(differentAnswers()));
-            button3.setText(String.valueOf(differentAnswers()));
-            button4.setText(String.valueOf(differentAnswers()));
-        } while(button1.getText().equals(button2.getText()) && button1.getText().equals(button3.getText()) &&
-                button1.getText().equals(button4.getText()) && button2.getText().equals(button3.getText()) &&
-                button2.getText().equals(button4.getText()) && button3.getText().equals(button4.getText()));
-    }
-
-
-     public void rightAnswer(int min, int max){
-
-     // This only works in newer APi`s:  int buttons = ThreadLocalRandom.current().nextInt(1,4);
-
-         final int buttons = r.nextInt(2) + 2;
-
-     Log.i("Info", buttons + "Button wurde genommen");
-
-     if(buttons == 1){
-     button1.setText(String.valueOf(answerRandomMathQuestion()));
-     }else if(buttons == 2){
-     button2.setText(String.valueOf(answerRandomMathQuestion()));
-     }else if(buttons == 3){
-     button3.setText(String.valueOf(answerRandomMathQuestion()));
-     }else button4.setText(String.valueOf(answerRandomMathQuestion()));
-     }
-
 }
