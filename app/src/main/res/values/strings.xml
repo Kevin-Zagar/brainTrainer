@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Gehirntrainer</string>
+    <string name="goButton">Go!</string>
+    <string name="exitButton">Exit</string>
+</resources>
